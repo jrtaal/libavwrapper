@@ -57,14 +57,21 @@ class ParameterContainer(MutableSequence):
 
     def add_parameter(self, key, value):
         """Adds an parameter to the container."""
-        self.container_list.append(Parameter(key, value))
-
+        copy = self.__copy__()
+        copy.container_list.append(Parameter(key, value))
+        return copy
+        
     def add_formatparam(self, name, *args, **kwargs):
         """Format the value of an parameter from the *args **kwargs
         and append it to the container."""
         parameter = format_parameter(*args, **kwargs)
-        self.add_parameter(name, parameter)
-
+        return self.add_parameter(name, parameter)
+        
+    def __copy__(self):
+        copy = type(self)()
+        copy.container_list = list(self.container_list)
+        return copy
+        
     def insert(self, index, value):
         self.container_list.insert(index, value)
 

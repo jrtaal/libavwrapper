@@ -14,6 +14,10 @@ from subprocess import Popen, PIPE, STDOUT
 from itertools import chain
 from threading import Thread
 
+import os
+#import resource
+import psutil
+
 try:
     from Queue import Queue, Empty
 except ImportError:
@@ -33,6 +37,9 @@ class Input(ParameterContainer):
         self.file_path = file_path
         ParameterContainer.__init__(self, *args)
 
+    def __copy__(self):
+        return type(self)(self.file_path, *list(self.container_list))
+
     def __iter__(self):
         return chain(ParameterContainer.__iter__(self),
                      ['-i', self.file_path])
@@ -49,11 +56,13 @@ class Output(ParameterContainer):
         self.file_path = file_path
         ParameterContainer.__init__(self, *args)
 
+    def __copy__(self):
+        return type(self)(self.file_path, *list(self.container_list))
+
     def overwrite(self):
         """Overwrite the file if it already exist"""
-        self.add_parameter('-y', None)
-        return self
-
+        return self.add_parameter('-y', None)
+    
     def __iter__(self):
         return chain(ParameterContainer.__iter__(self), [self.file_path])
 
@@ -69,6 +78,14 @@ class AVConvProcess(object):
         self.queue = Queue(maxsize=2000)
         self.process = None
 
+    def set_limits(self):
+        pid = os.getpid()
+        ps = psutil.Process(pid)
+        ps.set_nice(10)
+        #resource.setrlimit(resource.RLIMIT_CPU, (1, 1))
+         
+        
+        
     def _queue_output(self, out, queue):
         """Read the output from the command bytewise. On every newline
         the line is put to the queue."""
@@ -94,7 +111,7 @@ class AVConvProcess(object):
         :return: self
         """
         self.process = Popen(self.command, bufsize=1,
-                             stdin=PIPE, stdout=PIPE, stderr=STDOUT)
+                             stdin=PIPE, stdout=PIPE, stderr=STDOUT, preexec_fn=self.set_limits)
         thread = Thread(target=self._queue_output,
                         args=(self.process.stdout, self.queue))
         thread.deamon = daemon
@@ -144,6 +161,9 @@ class AVConv(ParameterContainer):
         self.binary = binary
         self.process = None
         ParameterContainer.__init__(self, *args)
+
+    def __copy__(self):
+        return type(self)(self.binary, *list(self.container_list))
 
     def add_parameter(self, key, value):
         self.container_list.insert(0, Parameter(key, value))

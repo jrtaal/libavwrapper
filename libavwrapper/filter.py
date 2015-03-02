@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 """
     libavwrapper.filter
     ~~~~~~~~~~~~~~~~~~~~
@@ -40,135 +40,105 @@ class VideoFilter(FilterContainer):
     """
 
     def blackframe(self, amount, threshold):
-        self.add_formatparam('blackframe', amount, threshold)
-        return self
+        return self.add_formatparam('blackframe', amount, threshold)
 
     def copy(self):
-        self.add_parameter('copy', None)
-        return self
+        return self.add_parameter('copy', None)
 
     def crop(self, out_w, out_h=None, x=None, y=None):
-        self.add_formatparam('crop', out_w, out_h, x, y)
-        return self
+        return self.add_formatparam('crop', out_w, out_h, x, y)
 
     def cropdetect(self, limit=None, round=None, reset=None):
-        self.add_formatparam('cropdetect', limit, round, reset)
-        return self
+        return self.add_formatparam('cropdetect', limit, round, reset)
 
     def drawbox(self, x, y, width, height, color):
-        self.add_formatparam('drawbox', x, y, width, height, color)
-        return self
+        return self.add_formatparam('drawbox', x, y, width, height, color)
 
     def drawtext(self, **kwargs):
-        self.add_formatparam('drawtext', **kwargs)
-        return self
+        return self.add_formatparam('drawtext', **kwargs)
 
     def fade(self, type, start, number):
-        self.add_formatparam('fade', type, start, number)
-        return self
+        return self.add_formatparam('fade', type, start, number)
 
     def fieldorder(self, type):
         if str(type) not in ['0', '1', 'bff', 'tff']:
             raise ValueError('Invalid Parameter for fieldorder. '
                              'Read avconv manual!')
-        self.add_formatparam('fieldorder', type)
-        return self
+        return self.add_formatparam('fieldorder', type)
 
     def fifo(self):
-        self.add_parameter('fifo', None)
-        return self
+        return self.add_parameter('fifo', None)
 
     def format(self, *args):
-        self.add_formatparam('format', *args)
-        return self
+        return self.add_formatparam('format', *args)
 
     def freior(self, name, *args):
-        self.add_formatparam('frei0r', name, *args)
-        return self
+        return self.add_formatparam('frei0r', name, *args)
 
     def gradfun(self, strength='', radius=''):
-        self.add_formatparam('gradfun', strength, radius)
-        return self
+        return self.add_formatparam('gradfun', strength, radius)
 
     def hflip(self):
-        self.add_parameter('hflip', None)
-        return self
+        return self.add_parameter('hflip', None)
 
     def hqdn3d(self, luma_sp=None, chroma_sp=None,
                luma_tmp=None, chroma_tmp=None):
-        self.add_formatparam('hqdn3d',
+        return self.add_formatparam('hqdn3d',
             luma_sp, chroma_sp, luma_tmp, chroma_tmp)
-        return self
 
     def mp(self, **kwargs):
-        self.add_formatparam('mp', **kwargs)
-        return self
+        return self.add_formatparam('mp', **kwargs)
 
     def negate(self):
-        self.add_parameter('negate', 1)
-        return self
+        return self.add_parameter('negate', 1)
 
     def noformat(self, *args):
-        self.add_formatparam('noformat', *args)
-        return self
+        return self.add_formatparam('noformat', *args)
 
     def null(self):
-        self.add_parameter('null', None)
-        return self
+        return self.add_parameter('null', None)
 
     def overlay(self, x, y):
-        self.add_formatparam('overlay', x, y)
-        return self
+        return self.add_formatparam('overlay', x, y)
 
     def pad(self, width, height, x, y, color):
-        self.add_formatparam('pad', width, height, x, y, color)
-        return self
+        return self.add_formatparam('pad', width, height, x, y, color)
 
     def scale(self, width=-1, height=-1):
-        self.add_formatparam('scale', width, height)
-        return self
+        return self.add_formatparam('scale', width, height)
 
     def select(self, expression):
-        self.add_formatparam('select', expression)
-        return self
+        return self.add_formatparam('select', expression)
 
     def setdar(self, x, y):
-        self.add_formatparam('setdar', x, y)
-        return self
+        return self.add_formatparam('setdar', x, y)
 
     def setpts(self, expression):
-        self.add_formatparam('setpts', expression)
-        return self
+        return self.add_formatparam('setpts', expression)
 
     def setsar(self, x, y):
-        self.add_formatparam('setsar', x, y)
-        return self
+        return self.add_formatparam('setsar', x, y)
 
     def slicify(self, height=16):
-        self.add_formatparam('slicify', height)
-        return self
+        return self.add_formatparam('slicify', height)
 
     def transpose(self, type):
         if str(type) not in ['0', '1', '2', '3']:
             raise ValueError('Invalid Parameter for transpose. '
                              'Read avconv manual')
-        self.add_formatparam('transpose', type)
-        return self
+        return self.add_formatparam('transpose', type)
 
     def unsharp(self, *args):
         if len(args) > 6:
             message = 'unsharp() takes exactly 6 positional arguments'
             raise TypeError(message)
-        self.add_formatparam('unsharp', *args)
-        return self
+        return self.add_formatparam('unsharp', *args)
 
     def vflip(self):
-        self.add_parameter('vflip', None)
-        return self
+        return self.add_parameter('vflip', None)
 
     def yadif(self, mode=0, parity=-1):
-        self.add_formatparam('yadif', mode, parity)
-        return self
+        return self.add_formatparam('yadif', mode, parity)
 
     def __iter__(self):
         return chain(['-vf', FilterContainer.__str__(self)])

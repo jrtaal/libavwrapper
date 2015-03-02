@@ -1,4 +1,4 @@
-# -*- coding: utf8 -*-
+# -*- coding: utf-8 -*-
 """
     libavwrapper.codec
     ~~~~~~~~~~~~~~~~~~~
@@ -25,6 +25,8 @@ class Codec(ParameterContainer):
         self.name = name
         ParameterContainer.__init__(self, *args)
 
+    def __copy__(self):
+        return type(self)(self.name, *list(self.container_list))
 
 class VideoCodec(Codec):
     """This represent an video codec.
@@ -34,46 +36,44 @@ class VideoCodec(Codec):
     """
 
     def bitrate(self, bitrate):
-        self.add_formatparam('-b', str(bitrate))
-        return self
+        return self.add_formatparam('-b:v', str(bitrate))
+        
 
     def frames(self, number):
-        self.add_formatparam('-vframes', str(number))
-        return self
-
+        return self.add_formatparam('-vframes', str(number))
+        
     def fps(self, fps):
-        self.add_formatparam('-r', str(fps))
-        return self
+        return self.add_formatparam('-r', str(fps))
+        
+    def keyint_min(self, keyint):
+        return self.add_formatparam('-keyint_min', str(keyint))
+        
 
+    def gopsize(self, gopsize):
+        return self.add_formatparam('-g', str(gopsize))
+                
     def size(self, x, y):
-        filter = "{x}x{y}".format(x, y)
-        self.add_formatparam('-s', filter)
-        return self
-
+        filter = "{x}x{y}".format(x=x, y=y)
+        return self.add_formatparam('-s', filter)
+        
     def aspect(self, x, y):
-        self.add_formatparam('-aspect', x, y)
-        return self
-
+        return self.add_formatparam('-aspect', x, y)
+        
     def bitrate_tolerance(self, tolerance):
-        self.add_formatparam('-bt', str(tolerance))
-        return self
-
+        return self.add_formatparam('-bt', str(tolerance))
+        
     def max_bitrate(self, rate):
-        self.add_formatparam('-maxrate', str(rate))
-        return self
-
+        return self.add_formatparam('-maxrate', str(rate))
+        
     def min_bitrate(self, rate):
-        self.add_formatparam('-minrate', str(rate))
-        return self
-
+        return self.add_formatparam('-minrate', str(rate))
+        
     def buffer_size(self, size):
-        self.add_formatparam('-bufsize', str(size))
-        return self
-
+        return self.add_formatparam('-bufsize', str(size))
+       
     def pass_number(self, number):
-        self.add_formatparam('-pass', str(number))
-        return self
-
+        return self.add_formatparam('-pass', str(number))
+        
     def __iter__(self):
         return chain(['-vcodec', self.name], Codec.__iter__(self))
 
@@ -86,24 +86,19 @@ class AudioCodec(Codec):
     """
 
     def frames(self, number):
-        self.add_formatparam('-aframes', str(number))
-        return self
-
+        return self.add_formatparam('-aframes', str(number))
+        
     def frequence(self, freq):
-        self.add_formatparam('-ar', str(freq))
-        return self
+        return self.add_formatparam('-ar', str(freq))
 
     def bitrate(self, rate):
-        self.add_formatparam('-ab', str(rate))
-        return self
+        return self.add_formatparam('-b:a', str(rate))
 
     def quality(self, number):
-        self.add_formatparam('-aq', str(number))
-        return self
+        return self.add_formatparam('-aq', str(number))
 
     def channels(self, number):
-        self.add_formatparam('-ac', str(number))
-        return self
+        return self.add_formatparam('-ac', str(number))
 
     def __iter__(self):
         return chain(['-acodec', self.name], Codec.__iter__(self))
