@@ -53,7 +53,7 @@ class VideoCodec(Codec):
         return self.add_formatparam('-g', str(gopsize))
                 
     def size(self, x, y):
-        filter = "{x}x{y}".format(x=x, y=y)
+        filter = "{}x{}".format(x, y)
         return self.add_formatparam('-s', filter)
         
     def aspect(self, x, y):
